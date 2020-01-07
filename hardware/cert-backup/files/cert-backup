@@ -7,7 +7,7 @@ BACKEND="/usr/share/cert-backup/backend.sh"
 	exit 1
 }
 
-source "$BACKEND"
+. "$BACKEND"
 
 # Create temporally directory
 workdir="$(mktemp -d)"
