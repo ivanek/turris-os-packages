@@ -28,7 +28,7 @@ else
 BACKEND:=btrfs
 endif
 
-define Package/$(PKG_NAME)/install
+define Package/cert-backup/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ./files/cert-backup $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/share/cert-backup
@@ -37,4 +37,4 @@ endef
 
 Build/Compile:=:
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,cert-backup))
