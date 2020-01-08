@@ -18,24 +18,53 @@ PKG_LICENSE:=BSD-3-Clause
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/cert-backup
-  TITLE:=cert-backup
+define Package/Common
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=Certificates backuper
   DEPENDS:=+mount-utils
 endef
 
-ifneq ($(CONFIG_TARGET_mpc85xx_p2020_TURRIS),y)
-BACKEND:=turris1x
-else
-BACKEND:=btrfs
-endif
+define Package/cert-backup
+  $(call Package/Common)
+  DEPENDS+=+cert-backup-backend
+endef
+
+define Package/CommonBackend
+  $(call Package/Common)
+  PROVIDES:=cert-backup-backend
+endef
+
+define Package/cert-backup-btrfs
+  $(call Package/CommonBackend)
+  TITLE+= - Btrfs backend
+  DEPENDS+=+btrfs-progs
+endef
+
+define Package/cert-backup-turris1x
+  $(call Package/CommonBackend)
+  TITLE+=Certificates backuper - Turris 1.x backend
+  DEPENDS:=@TARGET_mpc85xx_p2020_TURRIS
+  CONFLICTS:=cert-backup-btrfs
+endef
 
 define Package/cert-backup/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ./files/cert-backup $(1)/usr/sbin/
+endef
+
+define Package/cert-backup-btrfs/install
 	$(INSTALL_DIR) $(1)/usr/share/cert-backup
-	$(INSTALL_FILE) ./files/$(BACKEND)_backend.sh $(1)/usr/share/cert-backup/backend.sh
+	$(INSTALL_FILE) ./files/btrfs_backend.sh $(1)/usr/share/cert-backup/backend.sh
+endef
+
+define Package/cert-backup-turris1x/install
+	$(INSTALL_DIR) $(1)/usr/share/cert-backup
+	$(INSTALL_FILE) ./files/turris1x_backend.sh $(1)/usr/share/cert-backup/backend.sh
 endef
 
 Build/Compile:=:
 
 $(eval $(call BuildPackage,cert-backup))
+$(eval $(call BuildPackage,cert-backup-btrfs))
+$(eval $(call BuildPackage,cert-backup-turris1x))
