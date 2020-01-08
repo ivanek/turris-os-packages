@@ -6,7 +6,7 @@ mount_store() (
 	# Note: --pairs ensures safety of this eval
 	eval "$(findmnt --first-only --uniq --pairs --output SOURCE,FSTYPE "$root")"
 	[ "$FSTYPE" = "btrfs" ] || {
-		echo "cert-backup is available only on BTRFS root filesystem" >&2
+		echo "cert-backup is available only on Btrfs root filesystem" >&2
 		exit 2
 	}
 
