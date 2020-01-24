@@ -34,6 +34,7 @@ define Package/sentinel-eula/description
 endef
 
 define Package/sentinel-eula/install
+	$(call Build/Install/Default)
 	$(INSTALL_DIR) $(1)/usr/share/sentinel-eula/
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/usr/share/sentinel-eula/
 endef
