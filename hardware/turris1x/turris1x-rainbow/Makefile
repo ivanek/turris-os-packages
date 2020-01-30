@@ -33,9 +33,7 @@ define Package/turris1x-rainbow/conffiles
 /etc/config/rainbow
 endef
 
-define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
-endef
+Build/Compile:=:
 
 define Package/turris1x-rainbow/install
 	$(INSTALL_DIR) $(1)/usr/bin/
