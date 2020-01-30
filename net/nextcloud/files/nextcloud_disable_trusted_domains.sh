@@ -8,7 +8,7 @@ nextcloud_cli() {
 	sudo -u nobody php-cli "$NEXTCLOUD_CLI_SCRIPT" "$@"
 }
 
-if [ ! -f "/srv/www/nextcloud/occ" ]; then
+if [ ! -f "$NEXTCLOUD_CLI_SCRIPT" ]; then
 	echo "Error! occ command not found!"
 	exit 1
 fi
