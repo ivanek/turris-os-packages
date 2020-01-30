@@ -14,7 +14,10 @@ if [ ! -f "/srv/www/nextcloud/occ" ]; then
 fi
 
 # check if * is in config.php
-ret_val=$(nextcloud_cli config:system:get trusted_domains|awk '{ if ($1 == "*") {print "isDisabled" ;exit 1} }')
+ret_val=$(
+	nextcloud_cli config:system:get trusted_domains \
+		| awk '$1 == "*" { print "isDisabled"; exit }'
+)
 if [ "$ret_val" = "isDisabled" ]; then
 	echo "Trusted domains already disabled.Nothing to do."
 else
