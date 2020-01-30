@@ -5,7 +5,7 @@
 NEXTCLOUD_CLI_SCRIPT="/srv/www/nextcloud/occ"
 
 nextcloud_cli() {
-	sudo -u nobody php-cli $NEXTCLOUD_CLI_SCRIPT "$@"
+	sudo -u nobody php-cli "$NEXTCLOUD_CLI_SCRIPT" "$@"
 }
 
 if [ ! -f "/srv/www/nextcloud/occ" ]; then
