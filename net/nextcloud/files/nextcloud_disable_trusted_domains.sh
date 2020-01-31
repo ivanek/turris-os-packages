@@ -21,6 +21,6 @@ ret_val=$(
 if [ "$ret_val" = "isDisabled" ]; then
 	echo "Info: Trusted domains already disabled. Nothing to do." >&2
 else
-	echo "Disabling trusted domains."
+	echo "Info: Disabling trusted domains." >&2
 	nextcloud_cli config:system:set trusted_domains 1000 --value='*'
 fi
