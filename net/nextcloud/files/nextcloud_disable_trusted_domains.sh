@@ -9,7 +9,7 @@ nextcloud_cli() {
 }
 
 if [ ! -f "$NEXTCLOUD_CLI_SCRIPT" ]; then
-	echo "Error! occ command not found!"
+	echo "Error: occ command not found!" >&2
 	exit 1
 fi
 
