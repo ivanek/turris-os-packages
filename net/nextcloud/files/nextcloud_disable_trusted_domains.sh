@@ -19,7 +19,7 @@ ret_val=$(
 		| awk '$1 == "*" { print "isDisabled"; exit }'
 )
 if [ "$ret_val" = "isDisabled" ]; then
-	echo "Trusted domains already disabled.Nothing to do."
+	echo "Info: Trusted domains already disabled. Nothing to do." >&2
 else
 	echo "Disabling trusted domains."
 	nextcloud_cli config:system:set trusted_domains 1000 --value='*'
