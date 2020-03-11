@@ -32,7 +32,7 @@ define Package/fix-$(1)/DefaultInstall
 	$(INSTALL_BIN) ./files/$(1) $$(1)/usr/libexec/fix/$(1)
 endef
 
-Package/fix-$(1)/install ?= $(Package/fix-$(1)/DefaultInstall)
+Package/fix-$(1)/install ?= $$(Package/fix-$(1)/DefaultInstall)
 
 define Package/fix-$(1)/$(or $(3),postinst)
 #!/bin/sh
