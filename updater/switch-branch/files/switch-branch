@@ -1,6 +1,85 @@
 #!/bin/sh
 set -e
 
+print_usage() {
+	echo "Usage: switch-branch [OPTION]... [--] [BRANCH]"
+}
+
+print_help() {
+	print_usage
+	echo "Script for easier switching between rolling versions of Turris OS."
+	echo "It configures both updater-ng and opkg repository source."
+	echo
+	echo "Options:"
+	echo "  --branch         Switch to branch. This is expected in default unless --version or --verify used."
+	echo "  --version        Switch to fixed version"
+	echo "  --list-versions  List all available versions"
+	echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
+	echo "  --force          Change to unknown (not-existing) branch/version"
+	echo "  --help           Print this help text"
+	echo "Branch:"
+	echo "  If BRANCH is specified then switch is immediately performed."
+	echo "  You can run without BRANCH to enter interactive mode."
+	echo "  When --version is used with BRANCH then version instead of branch name is expected."
+	echo "  You can use --list-versions to found out available versions or use aliases:"
+	echo "    'latest' or 'major' to switch to latest version (not branch)"
+	echo "    'minor' to stay on current major version but switch to latest minor"
+	echo "    'fixup' to stay on current major and minor version but switch to latest fixup"
+}
+
+select_branch() {
+	cat <<EOF
+You are currently in: $CUR_BRANCH
+
+You can choose from one of these rolling releases:
+  hbs (snails, stable)
+    The default and most stable rolling release. Suggested for unexperienced
+    users and for critical infrastructure.
+  hbt (turtles, testing)
+    This rolling release contains next stable version. Please join this branch to
+    help us test it and to get new stuff few weeks up-front.
+  hbk (kittens, next-fixup)
+    This rolling release tracks stable OpenWrt upstream and stable Turris
+    development. It is used to prepare next fixup releases (aka 1.0.x). Manual
+    intervention might be sometimes required to fix introduced bugs and because of
+    that it is suggested to be used only by experienced users.
+  hbl (lions, next-minor)
+    This rolling release tracks stable OpenWrt upstream and the latest Turris
+    development. It is used to prepare next minor releases (aka 1.x.0). Manual
+    intervention might be sometimes required to fix introduced bugs and because of
+    that it is suggested to be used only by experienced users.
+  hbd (dragons, next-major)
+    This rolling release not only tracks the latest Turris but also the latest OpenWrt
+    development. It is used to prepare next major release (aka x.0.0). It can
+    frequently break and is suggested to be used only by experienced users on
+    non-critical infrastructure.
+EOF
+	read -r -p "Please enter name of a branch: " target
+	branch_alts
+	check_branch || {
+		echo "There is no known branch: $target"
+		echo
+		branch=
+	}
+}
+
+select_version() {
+	echo
+	echo "You are using version: $CUR_VERSION"
+	echo
+	echo "Following latest versions are available:"
+	echo "$EXISTING_VERSIONS" | sed -n '1,10s/^/  /p'
+	echo "Note that only latest release is supported!"
+	read -r -p "Please enter version: " target
+	check_version || {
+		echo "Version seems to be not existing released version: $target"
+		echo
+		branch=
+	}
+}
+
+##################################################################################
+
 load_current_state() {
 	. /lib/functions.sh
 	config_load updater
@@ -79,85 +158,6 @@ check_branch() {
 check_version() {
 	[ "$force" = "y" ] || \
 		echo "$EXISTING_VERSIONS" | grep -qxF "$target"
-}
-
-##################################################################################
-
-print_usage() {
-	echo "Usage: switch-branch [OPTION]... [--] [BRANCH]"
-}
-
-print_help() {
-	print_usage
-	echo "Script for easier switching between rolling versions of Turris OS."
-	echo "It configures both updater-ng and opkg repository source."
-	echo
-	echo "Options:"
-	echo "  --branch         Switch to branch. This is expected in default unless --version or --verify used."
-	echo "  --version        Switch to fixed version"
-	echo "  --list-versions  List all available versions"
-	echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
-	echo "  --force          Change to unknown (not-existing) branch/version"
-	echo "  --help           Print this help text"
-	echo "Branch:"
-	echo "  If BRANCH is specified then switch is immediately performed."
-	echo "  You can run without BRANCH to enter interactive mode."
-	echo "  When --version is used with BRANCH then version instead of branch name is expected."
-	echo "  You can use --list-versions to found out available versions or use aliases:"
-	echo "    'latest' or 'major' to switch to latest version (not branch)"
-	echo "    'minor' to stay on current major version but switch to latest minor"
-	echo "    'fixup' to stay on current major and minor version but switch to latest fixup"
-}
-
-select_branch() {
-	cat <<EOF
-You are currently in: $CUR_BRANCH
-
-You can choose from one of these rolling releases:
-  hbs (snails, stable)
-    The default and most stable rolling release. Suggested for unexperienced
-    users and for critical infrastructure.
-  hbt (turtles, testing)
-    This rolling release contains next stable version. Please join this branch to
-    help us test it and to get new stuff few weeks up-front.
-  hbk (kittens, next-fixup)
-    This rolling release tracks stable OpenWrt upstream and stable Turris
-    development. It is used to prepare next fixup releases (aka 1.0.x). Manual
-    intervention might be sometimes required to fix introduced bugs and because of
-    that it is suggested to be used only by experienced users.
-  hbl (lions, next-minor)
-    This rolling release tracks stable OpenWrt upstream and the latest Turris
-    development. It is used to prepare next minor releases (aka 1.x.0). Manual
-    intervention might be sometimes required to fix introduced bugs and because of
-    that it is suggested to be used only by experienced users.
-  hbd (dragons, next-major)
-    This rolling release not only tracks the latest Turris but also the latest OpenWrt
-    development. It is used to prepare next major release (aka x.0.0). It can
-    frequently break and is suggested to be used only by experienced users on
-    non-critical infrastructure.
-EOF
-	read -r -p "Please enter name of a branch: " target
-	branch_alts
-	check_branch || {
-		echo "There is no known branch: $target"
-		echo
-		branch=
-	}
-}
-
-select_version() {
-	echo
-	echo "You are using version: $CUR_VERSION"
-	echo
-	echo "Following latest versions are available:"
-	echo "$EXISTING_VERSIONS" | sed -n '1,10s/^/  /p'
-	echo "Note that only latest release is supported!"
-	read -r -p "Please enter version: " target
-	check_version || {
-		echo "Version seems to be not existing released version: $target"
-		echo
-		branch=
-	}
 }
 
 ##################################################################################
