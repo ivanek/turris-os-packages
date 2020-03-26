@@ -79,7 +79,14 @@ define Package/fix-dns-forward-quad9-split/description
   variant. This replaces quad9 with quad9_unfiltered setting as compatible change.
 endef
 
+define Package/fix-cron-remove-symlink/description
+  This package is used to remove invalid symlink for /etc/spool/cron/crontabs. With
+  this symlink it can not find crontab for root and if you do any change in LuCI for cron
+  it won't be added to crontab.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
 $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
+$(eval $(call FIX,cron-remove-symlink,+cronie +uci))
