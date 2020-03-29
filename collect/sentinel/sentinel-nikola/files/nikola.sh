@@ -31,6 +31,12 @@ get_wans() {
 	done
 }
 
+local enabled
+config_get_bool enabled nikola enabled "0"
+[ "$enabled" = "1" ] || return 0
+
+ps -C sentinel-proxy >/dev/null || return 0
+
 config_get_bool debug main debug 0
 config_get_bool random_delay main random_delay 1
 
