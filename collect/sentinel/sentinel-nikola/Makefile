@@ -45,16 +45,16 @@ define Py3Package/sentinel-nikola/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
-	$(INSTALL_DIR) $(1)/etc/config/
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/uci/nikola $(1)/etc/config/nikola
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/nikola.uci-defaults $(1)/etc/uci-defaults/99-sentinel-nikola
 	$(INSTALL_DIR) $(1)/etc/logrotate.d/
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/logrotate.d/iptables $(1)/etc/logrotate.d/iptables
+	$(INSTALL_BIN) ./files/iptables.logrotate $(1)/etc/logrotate.d/iptables
 	$(INSTALL_DIR) $(1)/usr/share/nikola/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/conf/cron/nikola.sh $(1)/usr/share/nikola/bin/nikola.sh
+	$(INSTALL_BIN) ./files/nikola.sh $(1)/usr/share/nikola/bin/nikola.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/cron/nikola $(1)/etc/cron.d/nikola
+	$(INSTALL_CONF) ./files/nikola.cron $(1)/etc/cron.d/nikola
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d/
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/etc/syslog-ng.d/nikola.conf
+	$(INSTALL_CONF) ./files/syslog-ng.conf $(1)/etc/syslog-ng.d/nikola.conf
 endef
 
 define Package/sentinel-nikola/postinst
