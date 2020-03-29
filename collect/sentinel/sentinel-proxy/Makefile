@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,28 +8,33 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
-PKG_VERSION:=1.1
-PKG_RELEASE:=6
+PKG_VERSION:=1.3
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE:=proxy-v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy/-/archive/v$(PKG_VERSION)/
+PKG_HASH:=c32347768573b764a961628b5a109e0a140ad5869666c56ccfab90dbb6d2260c
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-proxy
-  SECTION:=net
+  SECTION:=collect
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Proxy
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy
-  DEPENDS:=+czmq +libpaho-mqtt-c +zlib +libopenssl +sentinel-certgen
+  DEPENDS:= \
+  +czmq \
+  +libpaho-mqtt-c \
+  +zlib \
+  +libopenssl \
+  +libconfig \
+  +sentinel-certgen
 endef
 
 define Package/sentinel-proxy/description
@@ -41,7 +46,10 @@ define Package/sentinel-proxy/install
 	$(INSTALL_BIN) ./files/ca.pem $(1)/etc/sentinel/ca.pem
 
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel_proxy $(1)/usr/bin/sentinel-proxy
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel-proxy $(1)/usr/bin/sentinel-proxy
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel-device-token $(1)/usr/bin/sentinel-device-token
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-proxy
