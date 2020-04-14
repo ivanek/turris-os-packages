@@ -94,9 +94,9 @@ load_current_state() {
 	[ "$CUR_MODE" = "version" ] && \
 		config_get CUR_VERSION turris version "$CUR_VERSION"
 	# CUR_VERSION_MAJOR, CUR_VERSION_MINOR, CUR_VERSION_FIXUP
-	IFS=. read -r CUR_VERSION_MAJOR CUR_VERSION_MINOR CUR_VERSION_FIXUP <<EOF
-	$CUR_VERSION
-EOF
+	IFS=. read -r CUR_VERSION_MAJOR CUR_VERSION_MINOR CUR_VERSION_FIXUP <<-EOF
+		$CUR_VERSION
+	EOF
 }
 
 fetch_existing_versions() {
