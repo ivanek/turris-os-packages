@@ -316,7 +316,7 @@ done
 if [ "$mode" != "version" ]; then
 	case "$target" in
 		hbs|hbt)
-			# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
+			# We don't have to remove cznic-repo-keys-test as it's removed automatically by updater
 			;;
 		*)
 			# We can't use opkg to check for installed packages because it requires its lock which makes this tool impossible to use from install scripts
