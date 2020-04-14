@@ -293,7 +293,7 @@ if [ -n "$target" ]; then
 		version)
 			version_alts
 			if ! check_version; then
-				echo "Version $target seems to not be existing released version!" >&2
+				echo "Version $target seems not to be an existing released version!" >&2
 				exit 1
 			fi
 			;;
