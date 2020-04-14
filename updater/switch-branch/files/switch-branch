@@ -219,7 +219,7 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-if [ ! -f /etc/opkg/distfeeds.conf ] || ! grep -q "repo.turris.cz" /etc/opkg/distfeeds.conf; then
+if ! grep -q "repo.turris.cz" /etc/opkg/distfeeds.conf 2> /dev/null; then
 	echo "File /etc/opkg/distfeeds.conf is unknown. Are we running on Turris?" >&2
 	exit 1
 fi
