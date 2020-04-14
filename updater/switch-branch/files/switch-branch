@@ -276,7 +276,7 @@ if [ "$mode" = "version" ] || [ "$list_versions" = "y" ]; then
 fi
 # List all versions if requested
 if [ "$list_versions" = "y" ]; then
-	echo "$versions"
+	echo "$EXISTING_VERSIONS"
 	exit 0
 fi
 
