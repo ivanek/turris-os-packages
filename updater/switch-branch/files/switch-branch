@@ -135,7 +135,8 @@ version_alts() {
 			;;
 		minor)
 			target="$(echo "$EXISTING_VERSIONS" | \
-				awk -F . -v major="$CUR_VERSION_MAJOR" '$1 == major { print; exit }')"
+				awk -F . -v major="$CUR_VERSION_MAJOR" \
+					'$1 == major { print; exit }')"
 			;;
 		fixup)
 			target="$(echo "$EXISTING_VERSIONS" | \
