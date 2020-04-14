@@ -286,7 +286,7 @@ if [ -n "$target" ]; then
 		branch)
 			branch_alts
 			if ! check_branch; then
-				echo "Branch $target isn't supported branch!" >&2
+				echo "Branch $target isn't a supported branch!" >&2
 				exit 1
 			fi
 			;;
